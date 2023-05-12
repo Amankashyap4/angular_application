@@ -48,14 +48,43 @@ jobs:
   
     steps:
       - uses: actions/checkout@v2
-     
-      - name: Build & Push Docker image
-        uses: mr-smithers-excellent/docker-build-push@v3
+
+     #########This code is working fine for uploading on docker hub##########
+      # - name: Build & Push Docker image
+      #   uses: mr-smithers-excellent/docker-build-push@v3
+      #   with:
+      #       image: hexafold/angular_application                                        
+      #       tag: |     #latest 
+      #          type=ref,event=branch                                  
+      #       registry: docker.io
+      #       dockerfile: Dockerfile
+      #       username: ${{ secrets.DOCKER_USERNAME }}      
+      #       password: ${{ secrets.DOCKER_PASSWORD }} 
+      
+
+      - name: Docker meta
+        id: docker_meta
+        uses: docker/metadata-action@v3
         with:
-            image: hexafold/angular_application                                        
-            tag: |     #latest 
-               type=ref,event=branch                                  
-            registry: docker.io
-            dockerfile: Dockerfile
-            username: ${{ secrets.DOCKER_USERNAME }}      
-            password: ${{ secrets.DOCKER_PASSWORD }} 
+          images: registry.digitalocean.com/quantum-private-registry/angular_application
+          tags: |
+            type=ref,event=branch
+            type=sha,prefix={{branch}}
+
+      - name: Login to Docker
+        uses: docker/login-action@v1
+        with:
+          registry: docker.io                                         #${{ secrets.DOCKER_URL }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: build and Push image
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: ${{ steps.docker_meta.outputs.tags }}
+          file: ./Dockerfile
+
