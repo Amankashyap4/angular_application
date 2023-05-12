@@ -66,7 +66,7 @@ jobs:
         id: docker_meta
         uses: docker/metadata-action@v3
         with:
-          images: registry.digitalocean.com/quantum-private-registry/angular_application
+          images: hexafold/angular_application
           tags: |
             type=ref,event=branch
             type=sha,prefix={{branch}}
