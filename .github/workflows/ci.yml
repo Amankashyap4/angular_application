@@ -44,15 +44,15 @@ jobs:
 #          CI: true
 
   Docker:
-    need: build
-      runs-on: ubuntu-latest
+    needs: build
+    runs-on: ubuntu-latest
   
-     steps:
-       - uses: actions/checkout@v2
+    steps:
+      - uses: actions/checkout@v2
      
-       - name: Build & Push Docker image
-         uses: mr-smithers-excellent/docker-build-push@v3
-         with:
+      - name: Build & Push Docker image
+        uses: mr-smithers-excellent/docker-build-push@v3
+        with:
             image: hexafold/angular_application                                        
             tag: latest                                   
             registry: docker.io
