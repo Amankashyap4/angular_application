@@ -53,7 +53,8 @@ jobs:
         uses: mr-smithers-excellent/docker-build-push@v3
         with:
             image: hexafold/angular_application                                        
-            tag: latest                                   
+            tag: |     #latest 
+               type=ref,event=branch                                  
             registry: docker.io
             dockerfile: Dockerfile
             username: ${{ secrets.DOCKER_USERNAME }}      
