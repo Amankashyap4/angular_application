@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: trail-auto
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-angular
+  labels:
+    app: angular-application
+  namespace: trail-auto
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: angular-application
+  template:
+    metadata:
+      labels:
+        app: angular-application
+    spec:
+      containers:
+      - name: app1
+        image: hexafold/angular_application:latest
+        ports:
+        - containerPort: 80
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-angular
+  labels:
+    app: angular-application
+  namespace: trail-auto
+spec:
+  type: LoadBalancer  #ClusterIP
+  selector:
+    app: angular-application
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
